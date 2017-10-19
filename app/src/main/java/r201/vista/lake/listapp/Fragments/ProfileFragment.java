@@ -1,4 +1,4 @@
-package r201.vista.lake.listapp;
+package r201.vista.lake.listapp.Fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import r201.vista.lake.listapp.R;
 
 
 public class ProfileFragment extends Fragment {
