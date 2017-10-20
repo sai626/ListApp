@@ -1,4 +1,4 @@
-package r201.vista.lake.listapp;
+package r201.vista.lake.listapp.Activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,34 +8,36 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import r201.vista.lake.listapp.Fragments.GroupFragment;
 import r201.vista.lake.listapp.Fragments.ProfileFragment;
 import r201.vista.lake.listapp.Fragments.ReminderFragment;
+import r201.vista.lake.listapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     private Fragment profileFrag, reminderFrag, groupsFrag;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.reminders:
 
-                    ft.add(R.id.content, reminderFrag);
+                    ft.replace(R.id.content, reminderFrag);
                     ft.commit();
 
                     return true;
                 case R.id.groups:
 
-                    ft.add(R.id.content, groupsFrag);
+                    ft.replace(R.id.content, groupsFrag);
                     ft.commit();
 
                     return true;
                 case R.id.profile:
 
-                    ft.add(R.id.content,profileFrag);
+                    ft.replace(R.id.content, profileFrag);
                     ft.commit();
 
                     return true;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         profileFrag = new ProfileFragment();
         reminderFrag = new ReminderFragment();
+        groupsFrag = new GroupFragment();
     }
 
 }

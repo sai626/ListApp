@@ -23,7 +23,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="12th Sep, 12:35 pm"/>
+            android:text="12th Sep, 12:35 pm"
+            android:textAppearance="@style/SubheadingText"/>
 
         <Switch
             android:id="@+id/active"

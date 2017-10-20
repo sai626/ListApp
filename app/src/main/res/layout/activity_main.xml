@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="r201.vista.lake.listapp.MainActivity">
+    tools:context="r201.vista.lake.listapp.Activities.MainActivity">
 
     <FrameLayout
         android:id="@+id/content"

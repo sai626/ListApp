@@ -9,13 +9,23 @@
     </style>
 
     <style name="HeadingText">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/color900</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <style name="SubheadingText">
-        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textColor">@color/color700</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="NormalText">
+        <item name="android:textColor">@color/color500</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="DetailsText">
+        <item name="android:textColor">@color/color300</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>
