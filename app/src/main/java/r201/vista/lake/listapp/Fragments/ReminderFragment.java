@@ -39,7 +39,7 @@ public class ReminderFragment extends Fragment {
             View v = inflater.inflate(R.layout.fragment_reminder,container,false);
 
             reminderView = v.findViewById(R.id.reminders);
-            reminderAdapter = new ReminderAdapter(getContext(), reminderView, reminderList);
+            reminderAdapter = new ReminderAdapter(getContext(), getChildFragmentManager(), reminderList);
 
             reminderView.setAdapter(reminderAdapter);
             reminderView.setLayoutManager(new LinearLayoutManager(getContext()));

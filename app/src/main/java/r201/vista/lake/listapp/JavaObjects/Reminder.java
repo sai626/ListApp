@@ -18,6 +18,18 @@ public class Reminder {
         this.isActive = isActive;
     }
 
+    public void setReminderName(String reminderName) {
+        this.reminderName = reminderName;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public String getReminderName() {
         return reminderName;
     }

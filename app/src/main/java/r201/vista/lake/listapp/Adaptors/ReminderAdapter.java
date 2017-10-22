@@ -1,6 +1,9 @@
 package r201.vista.lake.listapp.Adaptors;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -8,13 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
+import r201.vista.lake.listapp.DialogFragments.ReminderNameEditDF;
 import r201.vista.lake.listapp.JavaObjects.Reminder;
 import r201.vista.lake.listapp.R;
 
@@ -25,19 +33,18 @@ import r201.vista.lake.listapp.R;
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
 
     private Context context;
-    private ViewGroup parent;
     private List<Reminder> reminderList;
+    private FragmentManager fragmentManager;
 
-    public ReminderAdapter(Context context, ViewGroup parent, List<Reminder> reminderList) {
+    public ReminderAdapter(Context context, FragmentManager fragmentManager, List<Reminder> reminderList) {
         this.context = context;
-        this.parent = parent;
         this.reminderList = reminderList;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
     public ReminderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        Log.d("viewType", String.valueOf(viewType));
         if (viewType == 0) {
             view = LayoutInflater.from(context).inflate(R.layout.reminder_layout, parent, false);
         }else {
@@ -77,9 +84,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         TextView name, date;
         Switch isActive;
         ImageView add;
+        Calendar time;
         int pos, viewType;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a  MMM dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a  MMM dd", Locale.US);
 
         public ReminderViewHolder(View itemView, int viewType) {
 
@@ -90,8 +98,16 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 name = itemView.findViewById(R.id.reminderName);
                 date = itemView.findViewById(R.id.reminderDate);
                 isActive = itemView.findViewById(R.id.active);
+
             }else  {
                 add = itemView.findViewById(R.id.addReminder);
+                add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        reminderList.add(new Reminder("New Reminder", Calendar.getInstance().getTime(),true));
+                        notifyItemInserted(reminderList.size()-1);
+                    }
+                });
             }
         }
 
@@ -106,10 +122,52 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             string.setSpan(new RelativeSizeSpan(.7f), dateString.indexOf(' '), dateString.indexOf(' ')+ 3, 0);
             date.setText(string);
             isActive.setChecked(r.isActive());
+
+            time = Calendar.getInstance();
+            time.setTime(r.getDate());
+            itemView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    showDatePicker();
+                }
+            });
+
+        }
+
+        private void showDatePicker(){
+            DatePickerDialog dialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    time.set(year, month, dayOfMonth);
+                    r.setDate(time.getTime());
+                    showTimePicker();
+                }
+            }, time.get(Calendar.YEAR), time.get(Calendar.MONTH), time.get(Calendar.DAY_OF_MONTH));
+
+            dialog.show();
+
+        }
+
+        private void showTimePicker(){
+            TimePickerDialog dialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    time.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    time.set(Calendar.MINUTE, minute);
+                    r.setDate(time.getTime());
+
+                    ReminderNameEditDF d = new ReminderNameEditDF();
+                    d.show(fragmentManager,"Name");
+                }
+            }, time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), true);
+
+            dialog.show();
         }
 
         public void bindAdd(int pos) {
             this.pos = pos;
         }
+
     }
 }
