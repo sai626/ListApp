@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         profileFrag = new ProfileFragment();
         reminderFrag = new ReminderFragment();
         groupsFrag = new GroupFragment();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.content, reminderFrag);
+        ft.commit();
     }
 
 }

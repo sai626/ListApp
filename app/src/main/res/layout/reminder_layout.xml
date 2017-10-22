@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="20dp"
     android:id="@+id/reminder">
 
@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/HeadingText"
-        android:text="ReminderName"/>
+        android:text="Reminder Name"
+        android:id="@+id/reminderName"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="12th Sep, 12:35 pm"
-            android:textAppearance="@style/SubheadingText"/>
+            android:textAppearance="@style/SubheadingText"
+            android:id="@+id/reminderDate"/>
 
         <Switch
             android:id="@+id/active"
