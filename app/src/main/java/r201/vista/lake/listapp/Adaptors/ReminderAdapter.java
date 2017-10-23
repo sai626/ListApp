@@ -3,6 +3,7 @@ package r201.vista.lake.listapp.Adaptors;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import r201.vista.lake.listapp.DialogFragments.ReminderNameEditDF;
+import r201.vista.lake.listapp.Interfaces.OnUpdateListener;
 import r201.vista.lake.listapp.JavaObjects.Reminder;
 import r201.vista.lake.listapp.R;
 
@@ -84,10 +86,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         TextView name, date;
         Switch isActive;
         ImageView add;
-        Calendar time;
+        Calendar time, temp;
         int pos, viewType;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a  MMM dd", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("h:m a  dd MMM/yy", Locale.US);
 
         public ReminderViewHolder(View itemView, int viewType) {
 
@@ -125,6 +127,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
             time = Calendar.getInstance();
             time.setTime(r.getDate());
+            temp = (Calendar) time.clone();
             itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -139,8 +142,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             DatePickerDialog dialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    time.set(year, month, dayOfMonth);
-                    r.setDate(time.getTime());
+                    temp.set(year, month, dayOfMonth);
                     showTimePicker();
                 }
             }, time.get(Calendar.YEAR), time.get(Calendar.MONTH), time.get(Calendar.DAY_OF_MONTH));
@@ -153,16 +155,31 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             TimePickerDialog dialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    time.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    time.set(Calendar.MINUTE, minute);
-                    r.setDate(time.getTime());
-
-                    ReminderNameEditDF d = new ReminderNameEditDF();
-                    d.show(fragmentManager,"Name");
+                    temp.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    temp.set(Calendar.MINUTE, minute);
+                    showNameEditor();
                 }
-            }, time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), true);
+            }, time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), false);
 
             dialog.show();
+        }
+
+        private void showNameEditor() {
+
+            ReminderNameEditDF d = new ReminderNameEditDF();
+            Bundle b = new Bundle();
+            b.putString("name", r.getReminderName());
+            d.setArguments(b);
+            d.setOnUpdateListener(new OnUpdateListener<String>() {
+                @Override
+                public void update(String s) {
+                    r.setReminderName(s);
+                    r.setDate(temp.getTime());
+                    time = (Calendar) temp.clone();
+                    notifyItemChanged(pos);
+                }
+            });
+            d.show(fragmentManager,"Name");
         }
 
         public void bindAdd(int pos) {
