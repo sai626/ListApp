@@ -1,4 +1,4 @@
-package r201.vista.lake.listapp.Adaptors;
+package r201.vista.lake.listapp.Adapters;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -23,6 +24,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import r201.vista.lake.listapp.DialogFragments.ReminderNameEditDF;
 import r201.vista.lake.listapp.Interfaces.OnUpdateListener;
 import r201.vista.lake.listapp.JavaObjects.Reminder;
@@ -36,12 +39,18 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     private Context context;
     private List<Reminder> reminderList;
+    private int maxInt;
     private FragmentManager fragmentManager;
+    private Realm realm;
 
-    public ReminderAdapter(Context context, FragmentManager fragmentManager, List<Reminder> reminderList) {
+    public ReminderAdapter(Context context, FragmentManager fragmentManager) {
         this.context = context;
-        this.reminderList = reminderList;
         this.fragmentManager = fragmentManager;
+        this.realm = Realm.getDefaultInstance();
+
+        RealmResults<Reminder> r = realm.where(Reminder.class).findAll();
+        reminderList = realm.copyFromRealm(r);
+        maxInt = reminderList.size();
     }
 
     @Override
@@ -101,13 +110,33 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 date = itemView.findViewById(R.id.reminderDate);
                 isActive = itemView.findViewById(R.id.active);
 
+                isActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        r.setActive(isChecked);
+
+                        realm.beginTransaction();
+
+                    }
+                });
+
             }else  {
                 add = itemView.findViewById(R.id.addReminder);
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        reminderList.add(new Reminder("New Reminder", Calendar.getInstance().getTime(),true));
+
+                        realm.beginTransaction();
+                        Reminder r = realm.createObject(Reminder.class);
+                        r.setId(maxInt);
+                        r.setReminderName("New Reminder");
+                        r.setDate(Calendar.getInstance().getTime());
+                        r.setActive(true);
+                        realm.commitTransaction();
+
+                        reminderList.add(r);
                         notifyItemInserted(reminderList.size()-1);
+                        maxInt++;
                     }
                 });
             }

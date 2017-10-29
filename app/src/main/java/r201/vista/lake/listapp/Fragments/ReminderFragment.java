@@ -8,11 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
 
-import r201.vista.lake.listapp.Adaptors.ReminderAdapter;
+import r201.vista.lake.listapp.Adapters.ReminderAdapter;
 import r201.vista.lake.listapp.JavaObjects.Reminder;
 import r201.vista.lake.listapp.R;
 import r201.vista.lake.listapp.TestObjects.ReminderObjects;
@@ -22,12 +21,11 @@ import r201.vista.lake.listapp.TestObjects.ReminderObjects;
  */
 public class ReminderFragment extends Fragment {
 
-    private List<Reminder> reminderList;
     private RecyclerView reminderView;
     private ReminderAdapter reminderAdapter;
 
     public ReminderFragment() {
-        reminderList = new ReminderObjects().getReminderList();
+        //reminderList = new ReminderObjects().getReminderList();
     }
 
 
@@ -39,7 +37,7 @@ public class ReminderFragment extends Fragment {
             View v = inflater.inflate(R.layout.fragment_reminder,container,false);
 
             reminderView = v.findViewById(R.id.reminders);
-            reminderAdapter = new ReminderAdapter(getContext(), getChildFragmentManager(), reminderList);
+            reminderAdapter = new ReminderAdapter(getContext(), getChildFragmentManager());
 
             reminderView.setAdapter(reminderAdapter);
             reminderView.setLayoutManager(new LinearLayoutManager(getContext()));

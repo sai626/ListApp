@@ -3,6 +3,7 @@
     package="r201.vista.lake.listapp">
 
     <application
+        android:name=".ListApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

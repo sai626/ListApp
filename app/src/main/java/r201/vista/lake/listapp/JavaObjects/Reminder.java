@@ -2,12 +2,17 @@ package r201.vista.lake.listapp.JavaObjects;
 
 import java.util.Date;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by saii on 20/10/17.
  */
 
-public class Reminder {
+public class Reminder extends RealmObject {
 
+    @PrimaryKey
+    private long id;
     private String reminderName;
     private Date date;
     private boolean isActive;
@@ -56,5 +61,13 @@ public class Reminder {
         boolean active = Boolean.getBoolean(temp[2]);
 
         return new Reminder(name, date, active);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
