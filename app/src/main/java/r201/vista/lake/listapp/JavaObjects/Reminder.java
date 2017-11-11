@@ -23,6 +23,9 @@ public class Reminder extends RealmObject {
         this.isActive = isActive;
     }
 
+    public Reminder() {
+    }
+
     public void setReminderName(String reminderName) {
         this.reminderName = reminderName;
     }

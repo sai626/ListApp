@@ -113,10 +113,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                 isActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        r.setActive(isChecked);
 
                         realm.beginTransaction();
-
+                        r.setActive(isChecked);
+                        realm.copyToRealmOrUpdate(r);
+                        realm.commitTransaction();
                     }
                 });
 
@@ -127,8 +128,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
                     public void onClick(View v) {
 
                         realm.beginTransaction();
-                        Reminder r = realm.createObject(Reminder.class);
-                        r.setId(maxInt);
+                        Reminder r = realm.createObject(Reminder.class,maxInt);
                         r.setReminderName("New Reminder");
                         r.setDate(Calendar.getInstance().getTime());
                         r.setActive(true);
@@ -202,8 +202,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             d.setOnUpdateListener(new OnUpdateListener<String>() {
                 @Override
                 public void update(String s) {
+                    realm.beginTransaction();
                     r.setReminderName(s);
                     r.setDate(temp.getTime());
+                    realm.copyToRealmOrUpdate(r);
+                    realm.commitTransaction();
                     time = (Calendar) temp.clone();
                     notifyItemChanged(pos);
                 }
