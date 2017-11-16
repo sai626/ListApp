@@ -50,7 +50,33 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
         RealmResults<Reminder> r = realm.where(Reminder.class).findAll();
         reminderList = realm.copyFromRealm(r);
-        maxInt = reminderList.size();
+
+        Number n = realm.where(Reminder.class).max("id");
+        if (n!=null){
+            maxInt = n.intValue();
+        } else {
+            maxInt = 0;
+        }
+    }
+
+    public void removeReminder(int position) {
+        Reminder r =reminderList.remove(position);
+        notifyItemRemoved(position);
+
+        realm.beginTransaction();
+        RealmResults<Reminder> results = realm.where(Reminder.class).equalTo("id",r.getId()).findAll();
+        results.deleteAllFromRealm();
+        realm.commitTransaction();
+    }
+
+    public void removeAllReminders() {
+        reminderList.clear();
+
+        notifyDataSetChanged();
+        realm.beginTransaction();
+        RealmResults<Reminder> realmResults = realm.where(Reminder.class).findAll();
+        realmResults.deleteAllFromRealm();
+        realm.commitTransaction();
     }
 
     @Override
